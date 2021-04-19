@@ -1,17 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import countries from '../../countries.json';
 
-function CountryList(props) {
+function CountryList() {
   return (
     <div className="list-group">
-      {props.countries.map((country) => (
+      {countries.map((country) => (
         <NavLink
           key={country.cca3}
-          className="list-group-item list-group-item-action"
+          className="list-group-item list-group-item-action d-flex align-items-center"
           activeClassName="active"
           to={`/country/${country.cca3}`}
         >
-          <span>{country.flag}</span> {country.name.common}
+          {`${country.flag} ${country.name.common}`}
         </NavLink>
       ))}
     </div>

@@ -2,12 +2,33 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import countries from '../../countries.json';
 
-function CountryDetail(props) {
-  const foundCountry = countries.find((country) => {
-    return country.cca3 === props.match.params.cca3;
-  });
+class CountryDetails extends React.Component {
+  state = {
+    name: '',
+    capital: '',
+    area: 0,
+    borders: [],
+  };
 
-  const renderBorderName = (cca3) => {
+  // componentDidMount é executado assim que o componente é renderizado na tela
+
+  componentDidUpdate = (prevProps) => {
+    const foundCountry = countries.find((country) => {
+      // O país atual do loop tem o seu cca3 igual ao cca3 da URL
+      return country.cca3 === this.props.match.params.cca3;
+    });
+
+    if (prevProps.match.params.cca3 !== this.props.match.params.cca3) {
+      this.setState({
+        name: foundCountry.name.common,
+        capital: foundCountry.capital,
+        area: foundCountry.area,
+        borders: [...foundCountry.borders],
+      });
+    }
+  };
+
+  renderBorderName = (cca3) => {
     const foundCountry = countries.find((country) => {
       return country.cca3 === cca3;
     });
@@ -15,25 +36,25 @@ function CountryDetail(props) {
     if (foundCountry) {
       return foundCountry.name.common;
     } else {
-      return 'NAME NOT FOUND';
+      return 'Country Not Found';
     }
   };
 
-  if (foundCountry) {
+  render() {
     return (
       <div>
-        <h1>{foundCountry.name.common}</h1>
+        <h1>{this.state.name}</h1>
         <table className="table">
           <thead></thead>
           <tbody>
             <tr>
               <td style={{ width: '30%' }}>Capital</td>
-              <td>{foundCountry.capital}</td>
+              <td>{this.state.capital}</td>
             </tr>
             <tr>
               <td>Area</td>
               <td>
-                {foundCountry.area} km
+                {this.state.area} km
                 <sup>2</sup>
               </td>
             </tr>
@@ -41,11 +62,15 @@ function CountryDetail(props) {
               <td>Borders</td>
               <td>
                 <ul>
-                  {foundCountry.borders.map((border, i) => (
-                    <li key={i}>
-                      <Link to={border}>{renderBorderName(border)}</Link>
-                    </li>
-                  ))}
+                  {this.state.borders.map((border) => {
+                    return (
+                      <li key={border}>
+                        <Link to={`/${border}`}>
+                          {this.renderBorderName(border)}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </td>
             </tr>
@@ -53,9 +78,7 @@ function CountryDetail(props) {
         </table>
       </div>
     );
-  } else {
-    return <h1>Country not found ):</h1>;
   }
 }
 
-export default CountryDetail;
+export default CountryDetails;

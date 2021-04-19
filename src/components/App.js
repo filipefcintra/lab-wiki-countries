@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CountryList from './country/CountryList';
-import CountryDetail from './country/CountryDetail';
+import CountryDetails from './country/CountryDetail';
 
 class App extends React.Component {
   render() {
@@ -26,7 +26,7 @@ class App extends React.Component {
                 <CountryList />
               </div>
               <div className="col-7">
-                <Route path="/country/:cca3" component={CountryDetail} />
+                <Route path="/:cca3" component={CountryDetails} />
               </div>
             </div>
           </div>
